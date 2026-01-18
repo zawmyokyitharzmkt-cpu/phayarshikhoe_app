@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ဘုရားရှိခိုး</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+body{
+ margin:0;
+ font-family:sans-serif;
+ background:#ffffff;
+ color:#000;
+}
+
+/* ===== Toolbar ===== */
+.toolbar{
+ position:fixed;
+ top:0; left:0;
+ width:100%;
+ height:64px;
+ background:#fff;
+ display:flex;
+ align-items:center;
+ padding:0 14px;
+ box-sizing:border-box;
+ box-shadow:0 2px 6px rgba(0,0,0,.15);
+ z-index:10;
+ transition:.3s;
+}
+.toolbar.collapsed{height:46px}
+
+.toolbar-left{
+ display:flex;
+ align-items:center;
+ gap:10px;
+}
+.toolbar-left img{
+ width:32px;
+ height:32px;
+}
+.toolbar-title{
+ font-size:18px;
+ font-weight:bold;
+}
+
+.toolbar-right i{
+ font-size:20px;
+ color:#3f51b5;
+}
+
+/* ===== Pages ===== */
+.page{
+ display:none;
+ padding:80px 14px 90px;
+}
+.page.active{display:block}
+
+/* ===== Title List ===== */
+.item{
+ background:#fff;
+ padding:14px;
+ border-radius:16px;
+ margin-bottom:12px;
+ display:flex;
+ align-items:center;
+ gap:14px;
+ box-shadow:0 2px 6px rgba(0,0,0,.12);
+ cursor:pointer;
+}
+.item img{
+ width:28px;
+ height:28px;
+}
+.item span{
+ font-size:16px;
+}
+
+/* ===== Reader ===== */
+.reader-title{
+ text-align:center;
+ font-size:20px;
+ font-weight:bold;
+ margin-bottom:14px;
+}
+.reader-content{
+ background:#fff;
+ padding:18px;
+ border-radius:16px;
+ box-shadow:0 2px 6px rgba(0,0,0,.12);
+ line-height:1.9;
+ white-space:pre-line;
+ font-size:18px;
+}
+
+/* ===== Reader Controls ===== */
+.reader-controls{
+ position:fixed;
+ bottom:0; left:0;
+ width:100%;
+ display:flex;
+ gap:10px;
+ padding:10px;
+ background:#fff;
+ box-shadow:0 -2px 6px rgba(0,0,0,.15);
+}
+.ctrl-btn{
+ flex:1;
+ background:#444;
+ color:#fff;
+ text-align:center;
+ padding:12px 0;
+ border-radius:30px;
+ font-weight:bold;
+}
+
+/* ===== Bottom Navigation ===== */
+.bottom-nav{
+ position:fixed;
+ bottom:0; left:0;
+ width:100%;
+ height:62px;
+ background:#fff;
+ display:flex;
+ box-shadow:0 -2px 6px rgba(0,0,0,.15);
+ z-index:9;
+}
+.nav-item{
+ flex:1;
+ text-align:center;
+ font-size:12px;
+ padding-top:6px;
+ color:#000;
+ cursor:pointer;
+}
+.nav-item i{
+ display:block;
+ font-size:22px;
+}
+.nav-item.active{
+ background:#f1f1f1;
+}
+
+/* ===== Font Dialog ===== */
+.dialog-bg{
+ position:fixed;
+ inset:0;
+ background:rgba(0,0,0,.4);
+ display:none;
+ align-items:center;
+ justify-content:center;
+ z-index:20;
+}
+.dialog{
+ background:#fff;
+ width:85%;
+ max-width:320px;
+ padding:16px;
+ border-radius:20px;
+ box-shadow:0 4px 10px rgba(0,0,0,.25);
+}
+.dialog input{
+ width:100%;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== Toolbar ===== -->
+<div id="toolbar" class="toolbar">
+ <div class="toolbar-left">
+  <img src="buddha.png" alt="Buddha">
+  <div class="toolbar-title">ဘုရားရှိခိုး</div>
+ </div>
+ <div class="toolbar-right">
+  <i id="fontIcon" class="fa-solid fa-text-height" style="display:none" onclick="openFont()"></i>
+ </div>
+</div>
+
+<!-- ===== Home Page ===== -->
+<div id="home" class="page active">
+ <div id="titleList"></div>
+</div>
+
+<!-- ===== Reader Page ===== -->
+<div id="reader" class="page" onscroll="collapse(this)">
+ <div class="reader-title" id="readerTitle"></div>
+ <div class="reader-content" id="readerContent"></div>
+</div>
+
+<!-- ===== Reader Buttons ===== -->
+<div id="readerControls" class="reader-controls" style="display:none">
+ <div class="ctrl-btn" onclick="prev()">⟨ Prev</div>
+ <div class="ctrl-btn" onclick="goHome()">🏠 Home</div>
+ <div class="ctrl-btn" onclick="next()">Next ⟩</div>
+</div>
+
+<!-- ===== Bottom Navigation ===== -->
+<div id="bottomNav" class="bottom-nav">
+ <div class="nav-item active" onclick="goHome()">
+  <i class="fa-solid fa-house" style="color:#4caf50"></i>
+  ပင်မစာမျက်နှာ
+ </div>
+ <div class="nav-item" onclick="alert('ပြီးမြှောက်မှု')">
+  <i class="fa-solid fa-circle-check" style="color:#2196f3"></i>
+  ပြီးမြှောက်မှု
+ </div>
+ <div class="nav-item" onclick="alert('စက်တင်')">
+  <i class="fa-solid fa-gear" style="color:#ff9800"></i>
+  စက်တင်
+ </div>
+</div>
+
+<!-- ===== Font Dialog ===== -->
+<div id="fontDialog" class="dialog-bg">
+ <div class="dialog">
+  <b>စာလုံးအရွယ်</b><br><br>
+  <input type="range" min="14" max="32" value="18"
+   oninput="readerContent.style.fontSize=this.value+'px'">
+  <div style="text-align:right;margin-top:10px">
+   <button onclick="fontDialog.style.display='none'">OK</button>
+  </div>
+ </div>
+</div>
+
+<script>
+const titles=[
+"ရှိခိုးဦးချကန်တော့နည်း","အပယ်ဖျက်","မိမိကိုယ်ကို မေတ္တာပို့",
+"ဩကာသကန်တော့်ချိုး","ငါးပါးသီလတောင်ခံခြင်း","သရဏဂုံဆောက်တည်ခြင်း",
+"ငါးပါးသီလ","ဘုရားဂုဏ်တော်","တရားဂုဏ်တော်","သံဃာဂုဏ်တော်",
+"နတ်ပင့်","မေတ္တာသုတ်","ခွင့်တောင်း","တရားနာဖိတ်","ဖယ်ရှား",
+"အဓိဌာန်ဝင် စုံပေါက်/စုံပွင့်","ပြန်လည်ဖိတ်ကြား",
+"ယောဆရာတော်ဘုရားကြီး သစ္စာပြုဆုတောင်း","နတ်ပို့","ကိုးနဝင်း"
+];
+
+const contents=[];
+contents[2]=`အရှင်ဘုရား တပည့်တော်သည် ဘဝအဆက်ဆက် ဘဝအဖုံဖုံ ယနေ့ ယခု ဘဝ ယခုအချိန်ထိ ဘုရား၊ တရား၊ သံဃာ၊ မိဘ၊ ဆရာ၊ ခင်ပွန်းကြီး (၁၀) ပါး နှင့် မပြစ်မှားထိုက်သော သူတို့ကို ကာယကံ၊ ဝစီကံ၊ မနောကံ သုံးပါးသောကံတို့မှ တစ်ပါးပါးသော ကံတို့ဖြင့် ကျေးဇူးပြုခဲ့မိသော် ကောင်းမှုကံ စေတနာ ပါရမီအရှိန်အဟုန်တို့သည် ယနေ့ယခုဘဝ ယခုအချိန်တွင် ခံစားရပြီးဖြစ်ပေါ်နေသော ဒုက္ခဝဋ်ဆင်းရဲများမှလည်း ကင်းစင်ပပျောက်ရပါလို၏။
+
+ငါ့ခန္ဓာ နှင့် ငါ့၏ ကိုယ်စောင့်နတ်လည်း ကျန်းမာပါစေ၊ ချမ်းသာပါစေ၊ ဒေါသခပ်သိမ်း ကင်းငြိမ်းပါစေ၊ ဆင်းရဲခပ်သိမ်း ကင်းငြိမ်းပါစေ၊ နှလုံးစိတ်ဝမ်း အေးချမ်းပါစေ။
+
+သူတော်ကောင်း တရားနှင့်အညီ နေနိုင်၊ သွားနိုင်၊ စားနိုင်၊ အိပ်နိုင်ပါစေ။
+
+မကောင်းသောစိတ်၊ မကောင်းသော အကြံအစည်၊ မကောင်းသော ပတ်ဝန်းကျင်၊ မကောင်းသော မိတ်ဆွေယုတ်များ နှင့် မကောင်းသော အိပ်မက်ဆိုးများမှလည်း ကင်းဝေးပါစေ။`;
+
+let idx=0;
+
+titles.forEach((t,i)=>{
+ let d=document.createElement("div");
+ d.className="item";
+ d.innerHTML=`<img src="dark_lotus.png"><span>${t}</span>`;
+ d.onclick=()=>openReader(i);
+ titleList.appendChild(d);
+});
+
+function openReader(i){
+ idx=i;
+ readerTitle.innerText=titles[i];
+ readerContent.innerText=contents[i]||"အကြောင်းအရာ မထည့်ရသေးပါ";
+ home.classList.remove("active");
+ reader.classList.add("active");
+ bottomNav.style.display="none";
+ readerControls.style.display="flex";
+ fontIcon.style.display="block";
+}
+
+function goHome(){
+ reader.classList.remove("active");
+ home.classList.add("active");
+ bottomNav.style.display="flex";
+ readerControls.style.display="none";
+ fontIcon.style.display="none";
+ toolbar.classList.remove("collapsed");
+}
+
+function next(){ if(idx<titles.length-1) openReader(idx+1); }
+function prev(){ if(idx>0) openReader(idx-1); }
+
+function openFont(){ fontDialog.style.display="flex"; }
+
+function collapse(e){
+ if(e.scrollTop>40) toolbar.classList.add("collapsed");
+ else toolbar.classList.remove("collapsed");
+}
+</script>
+
+</body>
+</html>
