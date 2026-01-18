@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ပြီးမြှောက်မှု</title>
+<style>
+body {
+    font-family: sans-serif;
+    background: white;
+    margin:0;
+    padding:0;
+    text-align:center;
+}
+.title-list {
+    list-style:none;
+    padding:0;
+    margin:20px auto;
+    width:90%;
+}
+.title-list li {
+    background:white;
+    color:black;
+    box-shadow:0 2px 5px rgba(0,0,0,0.2);
+    margin:10px 0;
+    padding:15px;
+    border-radius:10px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    transition:0.2s;
+}
+.title-list li:hover { transform: scale(1.02); }
+.title-list li img { width:30px; height:30px; margin-right:15px; }
+
+button {
+    background-color: darkgray;
+    color:white;
+    border:none;
+    padding:15px 25px;
+    margin:5px;
+    border-radius:8px;
+    cursor:pointer;
+}
+button:active { opacity:0.7; }
+</style>
+</head>
+<body>
+
+<h2>ပြီးမြှောက်မှု Title List</h2>
+
+<ul class="title-list">
+<li><img src="dark_lotus.png">အပယ်ဖျက်</li>
+<li><img src="dark_lotus.png">မိမိကိုယ်ကိုမေတ္တာပို့</li>
+<li><img src="dark_lotus.png">ဩကာသကန်တော်ချိုး</li>
+<li><img src="dark_lotus.png">ငါးပါးသီလတောင်ခံခြင်း</li>
+<li><img src="dark_lotus.png">သရဏဂုံဆောက်တည်ခြင်း</li>
+<li><img src="dark_lotus.png">ငါးပါးသီလ</li>
+<li><img src="dark_lotus.png">ဘုရားဂုဏ်တော်</li>
+<li><img src="dark_lotus.png">တရားဂုဏ်တော်</li>
+<li><img src="dark_lotus.png">သံဃာဂုဏ်တော်</li>
+<li><img src="dark_lotus.png">နတ်ပင့်</li>
+<li><img src="dark_lotus.png">မေတ္တာသုတ်</li>
+<li><img src="dark_lotus.png">ခွင့်တောင်း</li>
+<li><img src="dark_lotus.png">တရားနာဖိတ်</li>
+<li><img src="dark_lotus.png">ဖယ်ရှား</li>
+<li><img src="dark_lotus.png">အဓိဌာန်၀င် စုံပေါက်/စုံပွင့်</li>
+</ul>
+
+<div>
+<button onclick="prevTitle()">Prev</button>
+<button onclick="home()">Home</button>
+<button onclick="nextTitle()">Next</button>
+</div>
+
+<script>
+let titles=document.querySelectorAll(".title-list li");
+let currentIndex=0;
+for(let i=0;i<titles.length;i++){titles[i].style.display=i===0?"flex":"none";}
+function showTitle(index){for(let i=0;i<titles.length;i++){titles[i].style.display=i===index?"flex":"none";}}
+function nextTitle(){currentIndex++; if(currentIndex>=titles.length)currentIndex=titles.length-1; showTitle(currentIndex);}
+function prevTitle(){currentIndex--; if(currentIndex<0)currentIndex=0; showTitle(currentIndex);}
+function home(){currentIndex=0; showTitle(currentIndex);}
+</script>
+
+</body>
+</html>

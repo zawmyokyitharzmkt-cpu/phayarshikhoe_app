@@ -1,0 +1,100 @@
+<!DOCTYPE html >
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <style>
+        body {
+        font-family: sans-serif;
+        background-color: white;
+        margin: 0;
+        padding: 20px;
+        text-align: left;
+        }
+        h2 {
+        text-align: center;
+        }
+        .setting-section {
+        background: white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        margin: 15px 0;
+        padding: 15px;
+        border-radius: 10px;
+        }
+        label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: bold;
+        }
+        input[type="range"] {
+        width: 100%;
+        }
+        button {
+        background-color: darkgray;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        margin-top: 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        }
+        button:active {
+        opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Settings</h2>
+
+    <div class="setting-section">
+        <label>Theme</label>
+        <button onclick="setLightMode()">Light Mode</button>
+        <button onclick="setDarkMode()">Dark Mode</button>
+    </div>
+
+    <div class="setting-section">
+        <label>Font Size (<span id="fontsize-label">16</span>px)</label>
+        <input type="range" min="12" max="36" value="16" id="fontsizeRange">
+    </div>
+
+    <div class="setting-section">
+        <label>Font Family</label>
+        <input type="radio" name="fontFamily" value="sans-serif" checked> Sans-serif<br>
+        <input type="radio" name="fontFamily" value="Zawgyi-One"> Zawgyi-One<br>
+        <input type="radio" name="fontFamily" value="Myanmar3"> Myanmar3
+    </div>
+
+    <script>
+        const body = document.body;
+        const fontsizeRange = document.getElementById('fontsizeRange');
+        const fontsizeLabel = document.getElementById('fontsize-label');
+
+        // Light / Dark theme
+        function setLightMode() {
+        body.style.backgroundColor = "white";
+        body.style.color = "black";
+        }
+        function setDarkMode() {
+        body.style.backgroundColor = "#333";
+        body.style.color = "white";
+        }
+
+        // Font size seekbar
+        fontsizeRange.addEventListener('input', function(){
+        body.style.fontSize = fontsizeRange.value + "px";
+        fontsizeLabel.textContent = fontsizeRange.value;
+        });
+
+        // Font family selection
+        const fontRadios = document.querySelectorAll('input[name="fontFamily"]');
+        fontRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            body.style.fontFamily = this.value;
+        });
+        });
+    </script>
+
+</body>
+</html>
